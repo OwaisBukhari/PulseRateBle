@@ -32,8 +32,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.*;
@@ -55,6 +55,12 @@ public class BatteryDetectorActivity extends AppCompatActivity {
     TextView deviceStatus;
     @BindView(R.id.batteryLevel)
     TextView batteryLevel;
+    @BindView(R.id.pulserate)
+    TextView PulseRate;
+    @BindView(R.id.pi)
+    TextView pi;
+
+
 
     @BindView(R.id.deviceAddress)
     TextView deviceAddress;
@@ -109,7 +115,7 @@ public class BatteryDetectorActivity extends AppCompatActivity {
                 mConnected = true;
                 updateConnectionState("connected");
                 invalidateOptionsMenu();
-                displayData(intent.getStringExtra(BluetoothLEService.EXTRA_DATA));
+                displayData(intent.getStringArrayListExtra(BluetoothLEService.EXTRA_DATA));
                 System.out.println("sjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"+intent.getStringExtra(BluetoothLEService.ACTION_GATT_SERVICES_DISCOVERED));
 
             } else if (BluetoothLEService.ACTION_GATT_DISCONNECTED.equals(action)) {
@@ -120,7 +126,7 @@ public class BatteryDetectorActivity extends AppCompatActivity {
                 displayGattServices(mBluetoothLEService.getSupportedGattServices());
 
             } else if (BluetoothLEService.ACTION_DATA_AVAILABLE.equals(action)) {
-                displayData(intent.getStringExtra(BluetoothLEService.EXTRA_DATA));
+                displayData(intent.getStringArrayListExtra(BluetoothLEService.EXTRA_DATA));
             }
         }
     };
@@ -283,10 +289,14 @@ public class BatteryDetectorActivity extends AppCompatActivity {
         });
     }
 
-    private void displayData(String data) {
+    private void displayData(ArrayList<String> data) {
         if (data != null) {
             System.out.println(data);
-            batteryLevel.setText(data);
+            batteryLevel.setText(data.toString().substring(1,3));
+            PulseRate.setText(data.toString().substring(4,8));
+//            int s = Integer.parseInt(data.get(2))/10;
+//            pi.setText(s);
+            pi.setText(data.toString().substring(9,12));
         }
     }
 

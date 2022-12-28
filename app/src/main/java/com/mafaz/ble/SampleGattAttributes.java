@@ -17,7 +17,7 @@ public class SampleGattAttributes {
     private static HashMap<String, String> attributes = new HashMap();
 
     static {
-        attributes.put(UUID_BATTERY_LEVEL_UUID, "Battery Level");
+        attributes.put(UUID_BATTERY_LEVEL_UUID, "Connected");
         attributes.put(UUID_BATTERY_SERVICE, "Battery Service");
     }
 

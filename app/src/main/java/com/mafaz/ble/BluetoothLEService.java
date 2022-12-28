@@ -14,18 +14,15 @@ import android.os.Environment;
 import android.os.IBinder;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -143,6 +140,7 @@ public class BluetoothLEService extends Service {
             Log.d(TAG, "onCharacteristicChanged");
             try {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -211,6 +209,7 @@ public class BluetoothLEService extends Service {
         if (UUID_BATTERY_LEVEL.equals(characteristic.getUuid())) {
             int format = BluetoothGattCharacteristic.FORMAT_UINT8;
             System.out.println( characteristic.getValue()[1]+"line17222222222222222222222222222222222222222222222222222222");
+            System.out.println(characteristic.getValue()+"byteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeees");
 
 
             byte[] value = characteristic.getValue();
@@ -225,9 +224,28 @@ public class BluetoothLEService extends Service {
                 i++;
 
                 if (i == bArr.length) {
-                    System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+bArr);
+                    //System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+bArr);
                     if(bArr[0]==-86&&bArr[19]==-86 && bArr.length==20){
-                        final String battery_level = String.valueOf(bArr[6]);
+                        String arr[]={};
+                        ArrayList<String> battery_level=new ArrayList<String>(Arrays.asList(arr));
+                        String sp02=String.valueOf(bArr[5]);
+                        String pr=String.valueOf(bArr[6]);
+                        //String un=String.valueOf(bArr[8]/10);
+                        float s=bArr[8]/10;
+                        String un=String.valueOf(s);
+
+                        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+bArr);
+
+
+                        battery_level.add(sp02);
+
+                        battery_level.add((pr));
+                        battery_level.add(un);
+                        System.out.println(battery_level+"qqqqqqqqqqqqqqqqqqqqqq");
+
+//                        String[] battery_level;
+//
+//                         battery_level = String.valueOf(bArr[6]);
 
                         intent.putExtra(EXTRA_DATA, battery_level);
                         sendBroadcast(intent);
@@ -352,21 +370,129 @@ public class BluetoothLEService extends Service {
     }
 
     public void generateCsvFile(String fileName, BluetoothGattCharacteristic characteristic) {
+        String arr[]={};
+        ArrayList<String> battery_level=new ArrayList<String>(Arrays.asList(arr));
+
+
+
+        byte[] value = characteristic.getValue();
+        int i = 0;
+        for (byte b : value) {
+            byte[] bArr = this.buf;
+            bArr[i] = b;
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+bArr[i]+"------"+i);
+            i++;
+
+            if (i == bArr.length) {
+                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+bArr);
+                if(bArr[0]==-86&&bArr[19]==-86 && bArr.length==20){
+                    System.out.println("SENSORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR" + bArr[8] +"----------------"+bArr[8]/10);
+                    System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" + bArr +"----------------");
+
+//                    String arr[]={};
+//                    ArrayList<String> battery_level=new ArrayList<String>(Arrays.asList(arr));
+                    String one=String.valueOf(bArr[5]);
+                    String two=String.valueOf(bArr[6]);
+                    //String three=String.valueOf(bArr[8]);
+                    float s=bArr[8]/10;
+                    String three=String.valueOf(s);
+//                    String four=String.valueOf(bArr[3]);
+//                    String five=String.valueOf(bArr[4]);
+//                    String sp02=String.valueOf(bArr[5]);
+//                    String pr=String.valueOf(bArr[6]);
+//                    String eight=String.valueOf(bArr[7]);
+//                    String nine=String.valueOf(bArr[8]);
+//                    String ten=String.valueOf(bArr[9]);
+//                    String elev=String.valueOf(bArr[10]);
+//                    String twelve=String.valueOf(bArr[11]);
+//                    String thirteen=String.valueOf(bArr[12]);
+//                    String fourteen=String.valueOf(bArr[13]);
+//
+//                    String un=String.valueOf(bArr[14]);
+
+                    battery_level.add(one);
+                    battery_level.add(two);
+                    battery_level.add(three);
+//                    battery_level.add(four);
+//                    battery_level.add(five);
+//
+//
+//
+//                    battery_level.add(sp02);
+//                    battery_level.add((pr));
+//                    battery_level.add(eight);
+//                    battery_level.add(nine);
+//                    battery_level.add(ten);
+//                    battery_level.add(elev);
+//                    battery_level.add(twelve);
+//                    battery_level.add(thirteen);
+//                    battery_level.add(fourteen);
+//
+
+
+
+                    System.out.println(battery_level+"qqqqqqqqqqqqqqqqqqqqqq");
+                    //  System.out.println("kkkkkkkkkkkkkkk"+bArr[5]);
+                }
+
+
+            }
+//
+        }
 
         FileWriter writer = null;
 
         try {
 
             writer = new FileWriter(fileName,true);
-            writer.append("TempValue");
+           /* writer.append("SPO2");
             writer.append(',');
-            writer.append("time");
-            writer.append('\n');
+            writer.append("PulseRate");
+            writer.append(',');
+            writer.append("TimeStamp");
+            writer.append('\n');*/
 
-            writer.append(characteristic.getStringValue(0));
+            writer.append(battery_level.get(0));
             writer.append(',');
+            writer.append(battery_level.get(1));
+            writer.append(',');
+            writer.append(battery_level.get(2));
+            writer.append(',');
+
+//            writer.append(battery_level.get(2));
+//            writer.append(',');
+//            writer.append(battery_level.get(3));
+//            writer.append(',');
+//            writer.append(battery_level.get(4));
+//            writer.append(',');
+//            writer.append(battery_level.get(5));
+//            writer.append(',');
+//            writer.append(battery_level.get(6));
+//            writer.append(',');
+//            writer.append(battery_level.get(7));
+//            writer.append(',');
+//            writer.append(battery_level.get(8));
+//            writer.append(',');
+//            writer.append(battery_level.get(9));
+//            writer.append(',');
+//            writer.append(battery_level.get(10));
+//            writer.append(',');
+//            writer.append(battery_level.get(11));
+//            writer.append(',');
+//            writer.append(battery_level.get(12));
+//            writer.append(',');
+//            writer.append(battery_level.get(13));
+//            writer.append(',');
+//            writer.append(battery_level.get(14));
+//            writer.append(',');
             writer.append((timestamp = new Timestamp(System.currentTimeMillis())).toString());
             writer.append('\n');
+
+//            writer.append(battery_level.get(1));
+//            writer.append(',');
+//            writer.append(battery_level.get(1));
+//            writer.append(',');
+
 
            // writer.append("13C");
            // writer.append(',');
@@ -400,8 +526,10 @@ public class BluetoothLEService extends Service {
                     .addFormDataPart("submit","submit")
                     .build();
 
+            System.out.println("upload hoaaageeeeeeeeeeeeee");
+
             Request request=new Request.Builder()
-                    .url("http://"+"10.57.54.237"+"//project/upload.php")
+                    .url("https://"+"nedncl.com/robodoc/upload.php")
                     .post(requestBody)
                     .build();
 
@@ -414,6 +542,7 @@ public class BluetoothLEService extends Service {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    System.out.println(response.body());
 
                 }
             });
